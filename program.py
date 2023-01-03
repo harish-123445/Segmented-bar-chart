@@ -3,21 +3,24 @@ import pandas as pd
 import numpy as np
 df=pd.read_csv("dataset.csv")
 
-plt.figure(figsize=(10, 8))
-bar1=plt.bar(df.index,df['Los Angeles'],color="red",height="acc(thres=0.5)",width=0.4)
-bar2=plt.bar(df.index, df['Houston'], bottom=df['Los Angeles'],color="yellow",height="acc(thres=0.5)",width=0.4)
-bar3=plt.bar(df.index, df['Chicago'], bottom=df['Houston'],color="lime",height="acc(thres=0.5)",width=0.4)
-bar4=plt.bar(df.index, df['New York'], bottom=df['Chicago'],color="darkorange",height="acc(thres=0.5)",width=0.4)
-plt.legend(["Los Angeles", "Houston","Chicago","New York"], loc ="upper right",fontsize=15)
-plt.xticks(np.arange(12) , ('Q1 Notepad', 'Q1 Pencil', 'Q1 Whitener','Q2 Notepad', 'Q2 Pencil', 'Q2 Whitener','Q3 Notepad', 'Q3 Pencil', 'Q3 Whitener','Q4 Notepad', 'Q4 Pencil', 'Q4 Whitener' ),rotation='vertical',fontsize=15)
-plt.ylabel("Sales",fontsize=20)
+colors = ["red", "yellow","lime", "darkorange"]
 
-for bars in [bar1,bar2,bar3,bar4]:
-    for bar in bars:
-        yval = bar.get_height()
-        plt.text(bar.get_x() + bar.get_width() / 2.0, yval + 0.005, yval, ha="center")
-    
-plt.title("Quarterly Sales Analysis",fontsize=20)
+ax = df.iloc[:, 2:6].plot.barh(align='center', stacked=True, figsize=(10, 6), color=colors)
+plt.tight_layout()
 
+title = plt.title("Quarterly Sales Analysis", pad=60, fontsize=18)
+title.set_position([.5, 1.02])
+plt.subplots_adjust(top=0.8, left=0.26)
 
-plt.show()
+plt.yticks(np.arange(12) , ('Q1 Notepad', 'Q1 Pencil', 'Q1 Whitener','Q2 Notepad', 'Q2 Pencil', 'Q2 Whitener','Q3 Notepad', 'Q3 Pencil', 'Q3 Whitener','Q4 Notepad', 'Q4 Pencil', 'Q4 Whitener' ),fontsize=15)
+
+legend = plt.legend(loc='center',frameon=False,bbox_to_anchor=(0., 1.02, 1., .102), mode='expand', ncol=4, borderaxespad=-.46,prop={'size': 15})
+
+for text in legend.get_texts():
+    plt.setp(text,color='#525252')
+
+        
+for p in ax.patches:
+    width, height = p.get_width(), p.get_height()
+    x, y = p.get_xy() 
+    ax.text(x+width/2, y+height/2, '{:.0f}'.format(width), horizontalalignment='center', verticalalignment='center',color='black',fontsize=10)
